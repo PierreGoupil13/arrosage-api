@@ -42,6 +42,7 @@ class EmailPostManager
         $commentaire->setUtilisateur($userFrom);
         $commentaire->setMessage($data['message']);
 
+
         return $commentaire;
     }
 }
