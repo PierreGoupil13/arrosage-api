@@ -2,14 +2,31 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\UserFromPseudo;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Post(),
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/utilisateurs_from_pseudo',
+            controller:UserFromPseudo::class,
+            denormalizationContext: ['groups' => ['read:UserFromPseudo']]
+        )
+    ]
+)]
 class Utilisateur
 {
     #[ORM\Id]
@@ -33,6 +50,7 @@ class Utilisateur
     private ?string $role = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:UserFromPseudo'])]
     private ?string $pseudo = null;
 
     #[ORM\OneToMany(mappedBy: 'utilisateurProp', targetEntity: Annonce::class)]

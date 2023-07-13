@@ -3,11 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\CreateCommentaireController;
 use App\Repository\CommentaireRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/commentaires',
+            controller:CreateCommentaireController::class,
+        ),
+        new Get(),
+        new GetCollection()
+    ]
+)]
 class Commentaire
 {
     #[ORM\Id]
